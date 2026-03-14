@@ -49,7 +49,7 @@ class Program
             Console.WriteLine("6. Salir");
             Console.Write("Selecciona una opción: ");
 
-            string opcion = Console.ReadLine();
+            string? opcion = Console.ReadLine();
 
             switch (opcion)
             {
@@ -68,7 +68,7 @@ class Program
                         Console.WriteLine("0. Volver al menú principal");
                         Console.Write("Selecciona una opción: ");
 
-                        string subOpcion = Console.ReadLine();
+                        string? subOpcion = Console.ReadLine();
 
                         switch (subOpcion)
                         {
@@ -107,7 +107,7 @@ class Program
                                 Console.WriteLine("2. Listar disponibles");
                                 Console.WriteLine("3. Listar prestados");
                                 Console.Write("Selecciona: ");
-                                string listOpcion = Console.ReadLine();
+                                string? listOpcion = Console.ReadLine();
                                 switch (listOpcion)
                                 {
                                     case "1":
@@ -153,7 +153,7 @@ class Program
                             case "3":
                                 // Ver detalle
                                 Console.Write("Ingresa ID/ISBN: ");
-                                string buscarIsbn = Console.ReadLine();
+                                string? buscarIsbn = Console.ReadLine();
                                 bool encontrado = false;
                                 for (int i = 0; i < contadorLibros; i++)
                                 {
@@ -181,7 +181,7 @@ class Program
                             case "4":
                                 // Actualizar libro - submenú
                                 Console.Write("Ingresa ID/ISBN del libro a actualizar: ");
-                                string actualizarIsbn = Console.ReadLine();
+                                string? actualizarIsbn = Console.ReadLine();
                                 int index = -1;
                                 for (int i = 0; i < contadorLibros; i++)
                                 {
@@ -199,7 +199,7 @@ class Program
                                     Console.WriteLine("2. Editar autor");
                                     Console.WriteLine("3. Editar año / categoría");
                                     Console.Write("Selecciona: ");
-                                    string updateOpcion = Console.ReadLine();
+                                    string? updateOpcion = Console.ReadLine();
                                     switch (updateOpcion)
                                     {
                                         case "1":
@@ -232,7 +232,7 @@ class Program
                             case "5":
                                 // Eliminar libro
                                 Console.Write("Ingresa ID/ISBN del libro a eliminar: ");
-                                string eliminarIsbn = Console.ReadLine();
+                                string? eliminarIsbn = Console.ReadLine();
                                 int elimIndex = -1;
                                 for (int i = 0; i < contadorLibros; i++)
                                 {
@@ -297,7 +297,7 @@ class Program
                         Console.WriteLine("0. Volver al menú principal");
                         Console.Write("Selecciona una opción: ");
 
-                        string subOpcionUsuarios = Console.ReadLine();
+                        string? subOpcionUsuarios = Console.ReadLine();
 
                         switch (subOpcionUsuarios)
                         {
@@ -339,7 +339,7 @@ class Program
                             case "3":
                                 // Ver detalle
                                 Console.Write("Ingresa ID/Documento: ");
-                                string buscarDocumento = Console.ReadLine();
+                                string? buscarDocumento = Console.ReadLine();
                                 bool encontradoUsuario = false;
                                 for (int i = 0; i < contadorUsuarios; i++)
                                 {
@@ -363,7 +363,7 @@ class Program
                             case "4":
                                 // Actualizar usuario - submenú
                                 Console.Write("Ingresa ID/Documento del usuario a actualizar: ");
-                                string actualizarDocumento = Console.ReadLine();
+                                string? actualizarDocumento = Console.ReadLine();
                                 int indexUsuario = -1;
                                 for (int i = 0; i < contadorUsuarios; i++)
                                 {
@@ -381,7 +381,7 @@ class Program
                                     Console.WriteLine("2. Editar contacto");
                                     Console.WriteLine("3. Activar / desactivar");
                                     Console.Write("Selecciona: ");
-                                    string updateOpcionUsuario = Console.ReadLine();
+                                    string? updateOpcionUsuario = Console.ReadLine();
                                     switch (updateOpcionUsuario)
                                     {
                                         case "1":
@@ -394,7 +394,7 @@ class Program
                                             break;
                                         case "3":
                                             Console.Write("Activar (s/n): ");
-                                            string activar = Console.ReadLine().ToLower();
+                                            string? activar = Console.ReadLine().ToLower();
                                             activos[indexUsuario] = (activar == "s");
                                             break;
                                         default:
@@ -413,7 +413,7 @@ class Program
                             case "5":
                                 // Eliminar usuario
                                 Console.Write("Ingresa ID/Documento del usuario a eliminar: ");
-                                string eliminarDocumento = Console.ReadLine();
+                                string? eliminarDocumento = Console.ReadLine();
                                 int elimIndexUsuario = -1;
                                 for (int i = 0; i < contadorUsuarios; i++)
                                 {
@@ -493,7 +493,7 @@ class Program
                         Console.WriteLine("0. Volver al menú principal");
                         Console.Write("Selecciona una opción: ");
 
-                        string subOpcionPrestamos = Console.ReadLine();
+                        string? subOpcionPrestamos = Console.ReadLine();
 
                         switch (subOpcionPrestamos)
                         {
@@ -502,7 +502,7 @@ class Program
                                 if (contadorPrestamos < 100)
                                 {
                                     Console.Write("ID/Documento del usuario: ");
-                                    string idUsuario = Console.ReadLine();
+                                    string? idUsuario = Console.ReadLine();
                                     bool usuarioValido = false;
                                     int indexUsuario = -1;
                                     for (int i = 0; i < contadorUsuarios; i++)
@@ -525,7 +525,7 @@ class Program
                                     }
 
                                     Console.Write("ISBN del libro: ");
-                                    string idLibro = Console.ReadLine();
+                                    string? idLibro = Console.ReadLine();
                                     bool libroValido = false;
                                     int indexLibro = -1;
                                     for (int i = 0; i < contadorLibros; i++)
@@ -578,7 +578,7 @@ class Program
                                 Console.WriteLine("2. Activos");
                                 Console.WriteLine("3. Cerrados (devueltos)");
                                 Console.Write("Selecciona: ");
-                                string listOpcionPrestamos = Console.ReadLine();
+                                string? listOpcionPrestamos = Console.ReadLine();
                                 switch (listOpcionPrestamos)
                                 {
                                     case "1":
@@ -790,7 +790,7 @@ class Program
                         Console.WriteLine("0. Volver al menú principal");
                         Console.Write("Selecciona una opción: ");
 
-                        string subOpcionBusquedas = Console.ReadLine();
+                        string? subOpcionBusquedas = Console.ReadLine();
 
                         switch (subOpcionBusquedas)
                         {
@@ -803,9 +803,9 @@ class Program
                                 Console.WriteLine("3. Por ID/ISBN");
                                 Console.WriteLine("4. Por categoría");
                                 Console.Write("Selecciona: ");
-                                string buscarLibroOpcion = Console.ReadLine();
+                                string? buscarLibroOpcion = Console.ReadLine();
                                 Console.Write("Ingresa el término de búsqueda: ");
-                                string termino = Console.ReadLine();
+                                string? termino = Console.ReadLine();
                                 bool encontradoLibro = false;
                                 for (int i = 0; i < contadorLibros; i++)
                                 {
@@ -856,9 +856,9 @@ class Program
                                 Console.WriteLine("1. Por nombre");
                                 Console.WriteLine("2. Por ID/documento");
                                 Console.Write("Selecciona: ");
-                                string buscarUsuarioOpcion = Console.ReadLine();
+                                string? buscarUsuarioOpcion = Console.ReadLine();
                                 Console.Write("Ingresa el término de búsqueda: ");
-                                string terminoUsuario = Console.ReadLine();
+                                string? terminoUsuario = Console.ReadLine();
                                 bool encontradoUsuario = false;
                                 for (int i = 0; i < contadorUsuarios; i++)
                                 {
@@ -901,7 +901,7 @@ class Program
                                 Console.WriteLine("3. Préstamos vencidos");
                                 Console.WriteLine("4. Resumen general");
                                 Console.Write("Selecciona: ");
-                                string reporteOpcion = Console.ReadLine();
+                                string? reporteOpcion = Console.ReadLine();
                                 switch (reporteOpcion)
                                 {
                                     case "1":
