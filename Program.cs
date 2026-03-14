@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 class Program
 {
@@ -976,9 +977,199 @@ class Program
                     }
                     break;
                 case "5":
-                    Console.WriteLine("Has seleccionado: Guardar / Cargar datos");
-                    Console.WriteLine("Presiona cualquier tecla para continuar...");
-                    Console.ReadKey();
+                    // Submenú de Guardar / Cargar datos
+                    bool volverMenuPrincipalGuardar = false;
+                    while (!volverMenuPrincipalGuardar)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("=== GUARDAR / CARGAR DATOS ===");
+                        Console.WriteLine("1. Guardar datos");
+                        Console.WriteLine("2. Cargar datos");
+                        Console.WriteLine("3. Reiniciar datos");
+                        Console.WriteLine("0. Volver al menú principal");
+                        Console.Write("Selecciona una opción: ");
+
+                        string subOpcionGuardar = Console.ReadLine();
+
+                        switch (subOpcionGuardar)
+                        {
+                            case "1":
+                                // Guardar datos
+                                try
+                                {
+                                    // Guardar libros
+                                    using (StreamWriter writer = new StreamWriter("libros.txt"))
+                                    {
+                                        for (int i = 0; i < contadorLibros; i++)
+                                        {
+                                            writer.WriteLine(
+                                                $"{isbn[i]},{titulos[i]},{autores[i]},{categorias[i]},{anios[i]},{disponibles[i]}"
+                                            );
+                                        }
+                                    }
+                                    // Guardar usuarios
+                                    using (StreamWriter writer = new StreamWriter("usuarios.txt"))
+                                    {
+                                        for (int i = 0; i < contadorUsuarios; i++)
+                                        {
+                                            writer.WriteLine(
+                                                $"{documentos[i]},{nombres[i]},{contactos[i]},{activos[i]}"
+                                            );
+                                        }
+                                    }
+                                    // Guardar préstamos
+                                    using (StreamWriter writer = new StreamWriter("prestamos.txt"))
+                                    {
+                                        for (int i = 0; i < contadorPrestamos; i++)
+                                        {
+                                            writer.WriteLine(
+                                                $"{idPrestamos[i]},{idUsuariosPrestamo[i]},{idLibrosPrestamo[i]},{fechasPrestamo[i]},{fechasLimite[i]},{fechasDevolucion[i]},{estados[i]}"
+                                            );
+                                        }
+                                    }
+                                    Console.WriteLine("Datos guardados exitosamente.");
+                                }
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine($"Error al guardar: {ex.Message}");
+                                }
+                                Console.WriteLine("Presiona cualquier tecla para continuar...");
+                                Console.ReadKey();
+                                break;
+                            case "2":
+                                // Cargar datos
+                                try
+                                {
+                                    // Cargar libros
+                                    if (File.Exists("libros.txt"))
+                                    {
+                                        contadorLibros = 0;
+                                        using (StreamReader reader = new StreamReader("libros.txt"))
+                                        {
+                                            string line;
+                                            while (
+                                                (line = reader.ReadLine()) != null
+                                                && contadorLibros < 100
+                                            )
+                                            {
+                                                string[] parts = line.Split(',');
+                                                if (parts.Length == 6)
+                                                {
+                                                    isbn[contadorLibros] = parts[0];
+                                                    titulos[contadorLibros] = parts[1];
+                                                    autores[contadorLibros] = parts[2];
+                                                    categorias[contadorLibros] = parts[3];
+                                                    anios[contadorLibros] = int.Parse(parts[4]);
+                                                    disponibles[contadorLibros] = bool.Parse(
+                                                        parts[5]
+                                                    );
+                                                    contadorLibros++;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    // Cargar usuarios
+                                    if (File.Exists("usuarios.txt"))
+                                    {
+                                        contadorUsuarios = 0;
+                                        using (
+                                            StreamReader reader = new StreamReader("usuarios.txt")
+                                        )
+                                        {
+                                            string line;
+                                            while (
+                                                (line = reader.ReadLine()) != null
+                                                && contadorUsuarios < 100
+                                            )
+                                            {
+                                                string[] parts = line.Split(',');
+                                                if (parts.Length == 4)
+                                                {
+                                                    documentos[contadorUsuarios] = parts[0];
+                                                    nombres[contadorUsuarios] = parts[1];
+                                                    contactos[contadorUsuarios] = parts[2];
+                                                    activos[contadorUsuarios] = bool.Parse(
+                                                        parts[3]
+                                                    );
+                                                    contadorUsuarios++;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    // Cargar préstamos
+                                    if (File.Exists("prestamos.txt"))
+                                    {
+                                        contadorPrestamos = 0;
+                                        using (
+                                            StreamReader reader = new StreamReader("prestamos.txt")
+                                        )
+                                        {
+                                            string line;
+                                            while (
+                                                (line = reader.ReadLine()) != null
+                                                && contadorPrestamos < 100
+                                            )
+                                            {
+                                                string[] parts = line.Split(',');
+                                                if (parts.Length == 7)
+                                                {
+                                                    idPrestamos[contadorPrestamos] = int.Parse(
+                                                        parts[0]
+                                                    );
+                                                    idUsuariosPrestamo[contadorPrestamos] = parts[
+                                                        1
+                                                    ];
+                                                    idLibrosPrestamo[contadorPrestamos] = parts[2];
+                                                    fechasPrestamo[contadorPrestamos] = parts[3];
+                                                    fechasLimite[contadorPrestamos] = parts[4];
+                                                    fechasDevolucion[contadorPrestamos] =
+                                                        parts[5] == "null" ? null : parts[5];
+                                                    estados[contadorPrestamos] = parts[6];
+                                                    contadorPrestamos++;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    Console.WriteLine("Datos cargados exitosamente.");
+                                }
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine($"Error al cargar: {ex.Message}");
+                                }
+                                Console.WriteLine("Presiona cualquier tecla para continuar...");
+                                Console.ReadKey();
+                                break;
+                            case "3":
+                                // Reiniciar datos
+                                Console.Write(
+                                    "¿Estás seguro de reiniciar todos los datos? (s/n): "
+                                );
+                                string confirmacion = Console.ReadLine().ToLower();
+                                if (confirmacion == "s")
+                                {
+                                    contadorLibros = 0;
+                                    contadorUsuarios = 0;
+                                    contadorPrestamos = 0;
+                                    Console.WriteLine("Datos reiniciados.");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Operación cancelada.");
+                                }
+                                Console.WriteLine("Presiona cualquier tecla para continuar...");
+                                Console.ReadKey();
+                                break;
+                            case "0":
+                                volverMenuPrincipalGuardar = true;
+                                break;
+                            default:
+                                Console.WriteLine(
+                                    "Opción no válida. Presiona cualquier tecla para intentar de nuevo..."
+                                );
+                                Console.ReadKey();
+                                break;
+                        }
+                    }
                     break;
                 case "6":
                     Console.WriteLine("Saliendo del sistema...");
