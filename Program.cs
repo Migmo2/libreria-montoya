@@ -20,6 +20,16 @@ class Program
         bool[] activos = new bool[100];
         int contadorUsuarios = 0;
 
+        // Datos de préstamos (arrays fijos, tamaño máximo 100)
+        int[] idPrestamos = new int[100];
+        string[] idUsuariosPrestamo = new string[100];
+        string[] idLibrosPrestamo = new string[100];
+        string[] fechasPrestamo = new string[100];
+        string[] fechasLimite = new string[100];
+        string[] fechasDevolucion = new string[100];
+        string[] estados = new string[100]; // "activo" o "devuelto"
+        int contadorPrestamos = 0;
+
         Console.WriteLine("¡Bienvenido al Sistema de Gestión de Biblioteca Montoya!");
         Console.WriteLine("Aquí puedes gestionar libros, usuarios y préstamos.");
         Console.WriteLine("Presiona cualquier tecla para continuar...");
@@ -414,8 +424,19 @@ class Program
                                 }
                                 if (elimIndexUsuario != -1)
                                 {
-                                    // Validar si tiene préstamos activos (por ahora, asumir no)
-                                    bool tienePrestamos = false; // Placeholder
+                                    // Validar si tiene préstamos activos
+                                    bool tienePrestamos = false;
+                                    for (int k = 0; k < contadorPrestamos; k++)
+                                    {
+                                        if (
+                                            idUsuariosPrestamo[k] == eliminarDocumento
+                                            && estados[k] == "activo"
+                                        )
+                                        {
+                                            tienePrestamos = true;
+                                            break;
+                                        }
+                                    }
                                     if (tienePrestamos)
                                     {
                                         Console.WriteLine(
@@ -457,9 +478,303 @@ class Program
                     }
                     break;
                 case "3":
-                    Console.WriteLine("Has seleccionado: Préstamos");
-                    Console.WriteLine("Presiona cualquier tecla para continuar...");
-                    Console.ReadKey();
+                    // Submenú de Préstamos
+                    bool volverMenuPrincipalPrestamos = false;
+                    while (!volverMenuPrincipalPrestamos)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("=== MENÚ PRÉSTAMOS ===");
+                        Console.WriteLine("1. Crear préstamo");
+                        Console.WriteLine("2. Listar préstamos");
+                        Console.WriteLine("3. Ver detalle de préstamo (por ID)");
+                        Console.WriteLine("4. Registrar devolución");
+                        Console.WriteLine("5. Eliminar préstamo");
+                        Console.WriteLine("0. Volver al menú principal");
+                        Console.Write("Selecciona una opción: ");
+
+                        string subOpcionPrestamos = Console.ReadLine();
+
+                        switch (subOpcionPrestamos)
+                        {
+                            case "1":
+                                // Crear préstamo
+                                if (contadorPrestamos < 100)
+                                {
+                                    Console.Write("ID/Documento del usuario: ");
+                                    string idUsuario = Console.ReadLine();
+                                    bool usuarioValido = false;
+                                    int indexUsuario = -1;
+                                    for (int i = 0; i < contadorUsuarios; i++)
+                                    {
+                                        if (documentos[i] == idUsuario && activos[i])
+                                        {
+                                            usuarioValido = true;
+                                            indexUsuario = i;
+                                            break;
+                                        }
+                                    }
+                                    if (!usuarioValido)
+                                    {
+                                        Console.WriteLine("Usuario no encontrado o inactivo.");
+                                        Console.WriteLine(
+                                            "Presiona cualquier tecla para continuar..."
+                                        );
+                                        Console.ReadKey();
+                                        break;
+                                    }
+
+                                    Console.Write("ISBN del libro: ");
+                                    string idLibro = Console.ReadLine();
+                                    bool libroValido = false;
+                                    int indexLibro = -1;
+                                    for (int i = 0; i < contadorLibros; i++)
+                                    {
+                                        if (isbn[i] == idLibro && disponibles[i])
+                                        {
+                                            libroValido = true;
+                                            indexLibro = i;
+                                            break;
+                                        }
+                                    }
+                                    if (!libroValido)
+                                    {
+                                        Console.WriteLine("Libro no encontrado o no disponible.");
+                                        Console.WriteLine(
+                                            "Presiona cualquier tecla para continuar..."
+                                        );
+                                        Console.ReadKey();
+                                        break;
+                                    }
+
+                                    // Crear préstamo
+                                    idPrestamos[contadorPrestamos] = contadorPrestamos + 1;
+                                    idUsuariosPrestamo[contadorPrestamos] = idUsuario;
+                                    idLibrosPrestamo[contadorPrestamos] = idLibro;
+                                    Console.Write("Fecha de préstamo (dd/mm/yyyy): ");
+                                    fechasPrestamo[contadorPrestamos] = Console.ReadLine();
+                                    Console.Write("Fecha límite (dd/mm/yyyy): ");
+                                    fechasLimite[contadorPrestamos] = Console.ReadLine();
+                                    fechasDevolucion[contadorPrestamos] = null;
+                                    estados[contadorPrestamos] = "activo";
+                                    disponibles[indexLibro] = false; // Marcar libro como no disponible
+                                    contadorPrestamos++;
+                                    Console.WriteLine("Préstamo creado exitosamente.");
+                                }
+                                else
+                                {
+                                    Console.WriteLine(
+                                        "No se pueden crear más préstamos (límite alcanzado)."
+                                    );
+                                }
+                                Console.WriteLine("Presiona cualquier tecla para continuar...");
+                                Console.ReadKey();
+                                break;
+                            case "2":
+                                // Listar préstamos - submenú
+                                Console.Clear();
+                                Console.WriteLine("=== LISTAR PRÉSTAMOS ===");
+                                Console.WriteLine("1. Todos");
+                                Console.WriteLine("2. Activos");
+                                Console.WriteLine("3. Cerrados (devueltos)");
+                                Console.Write("Selecciona: ");
+                                string listOpcionPrestamos = Console.ReadLine();
+                                switch (listOpcionPrestamos)
+                                {
+                                    case "1":
+                                        Console.WriteLine("=== TODOS LOS PRÉSTAMOS ===");
+                                        for (int i = 0; i < contadorPrestamos; i++)
+                                        {
+                                            Console.WriteLine(
+                                                $"ID: {idPrestamos[i]} - Usuario: {idUsuariosPrestamo[i]} - Libro: {idLibrosPrestamo[i]} - Estado: {estados[i]}"
+                                            );
+                                        }
+                                        break;
+                                    case "2":
+                                        Console.WriteLine("=== PRÉSTAMOS ACTIVOS ===");
+                                        for (int i = 0; i < contadorPrestamos; i++)
+                                        {
+                                            if (estados[i] == "activo")
+                                            {
+                                                Console.WriteLine(
+                                                    $"ID: {idPrestamos[i]} - Usuario: {idUsuariosPrestamo[i]} - Libro: {idLibrosPrestamo[i]}"
+                                                );
+                                            }
+                                        }
+                                        break;
+                                    case "3":
+                                        Console.WriteLine("=== PRÉSTAMOS CERRADOS ===");
+                                        for (int i = 0; i < contadorPrestamos; i++)
+                                        {
+                                            if (estados[i] == "devuelto")
+                                            {
+                                                Console.WriteLine(
+                                                    $"ID: {idPrestamos[i]} - Usuario: {idUsuariosPrestamo[i]} - Libro: {idLibrosPrestamo[i]}"
+                                                );
+                                            }
+                                        }
+                                        break;
+                                    default:
+                                        Console.WriteLine("Opción no válida.");
+                                        break;
+                                }
+                                Console.WriteLine("Presiona cualquier tecla para continuar...");
+                                Console.ReadKey();
+                                break;
+                            case "3":
+                                // Ver detalle
+                                Console.Write("Ingresa ID del préstamo: ");
+                                if (int.TryParse(Console.ReadLine(), out int buscarIdPrestamo))
+                                {
+                                    bool encontradoPrestamo = false;
+                                    for (int i = 0; i < contadorPrestamos; i++)
+                                    {
+                                        if (idPrestamos[i] == buscarIdPrestamo)
+                                        {
+                                            Console.WriteLine($"ID Préstamo: {idPrestamos[i]}");
+                                            Console.WriteLine(
+                                                $"ID Usuario: {idUsuariosPrestamo[i]}"
+                                            );
+                                            Console.WriteLine($"ID Libro: {idLibrosPrestamo[i]}");
+                                            Console.WriteLine(
+                                                $"Fecha Préstamo: {fechasPrestamo[i]}"
+                                            );
+                                            Console.WriteLine($"Fecha Límite: {fechasLimite[i]}");
+                                            Console.WriteLine(
+                                                $"Fecha Devolución: {fechasDevolucion[i] ?? "N/A"}"
+                                            );
+                                            Console.WriteLine($"Estado: {estados[i]}");
+                                            encontradoPrestamo = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!encontradoPrestamo)
+                                    {
+                                        Console.WriteLine("Préstamo no encontrado.");
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("ID inválido.");
+                                }
+                                Console.WriteLine("Presiona cualquier tecla para continuar...");
+                                Console.ReadKey();
+                                break;
+                            case "4":
+                                // Registrar devolución
+                                Console.Write("Ingresa ID del préstamo a devolver: ");
+                                if (int.TryParse(Console.ReadLine(), out int devolverIdPrestamo))
+                                {
+                                    bool encontradoDevolucion = false;
+                                    for (int i = 0; i < contadorPrestamos; i++)
+                                    {
+                                        if (
+                                            idPrestamos[i] == devolverIdPrestamo
+                                            && estados[i] == "activo"
+                                        )
+                                        {
+                                            Console.Write("Fecha de devolución (dd/mm/yyyy): ");
+                                            fechasDevolucion[i] = Console.ReadLine();
+                                            estados[i] = "devuelto";
+                                            // Marcar libro como disponible
+                                            for (int j = 0; j < contadorLibros; j++)
+                                            {
+                                                if (isbn[j] == idLibrosPrestamo[i])
+                                                {
+                                                    disponibles[j] = true;
+                                                    break;
+                                                }
+                                            }
+                                            Console.WriteLine("Devolución registrada.");
+                                            encontradoDevolucion = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!encontradoDevolucion)
+                                    {
+                                        Console.WriteLine("Préstamo no encontrado o ya devuelto.");
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("ID inválido.");
+                                }
+                                Console.WriteLine("Presiona cualquier tecla para continuar...");
+                                Console.ReadKey();
+                                break;
+                            case "5":
+                                // Eliminar préstamo
+                                Console.Write("Ingresa ID del préstamo a eliminar: ");
+                                if (int.TryParse(Console.ReadLine(), out int eliminarIdPrestamo))
+                                {
+                                    int elimIndexPrestamo = -1;
+                                    for (int i = 0; i < contadorPrestamos; i++)
+                                    {
+                                        if (idPrestamos[i] == eliminarIdPrestamo)
+                                        {
+                                            elimIndexPrestamo = i;
+                                            break;
+                                        }
+                                    }
+                                    if (elimIndexPrestamo != -1)
+                                    {
+                                        if (estados[elimIndexPrestamo] == "activo")
+                                        {
+                                            // Devolver libro automáticamente
+                                            for (int j = 0; j < contadorLibros; j++)
+                                            {
+                                                if (isbn[j] == idLibrosPrestamo[elimIndexPrestamo])
+                                                {
+                                                    disponibles[j] = true;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        // Eliminar moviendo el último al lugar del eliminado
+                                        idPrestamos[elimIndexPrestamo] = idPrestamos[
+                                            contadorPrestamos - 1
+                                        ];
+                                        idUsuariosPrestamo[elimIndexPrestamo] = idUsuariosPrestamo[
+                                            contadorPrestamos - 1
+                                        ];
+                                        idLibrosPrestamo[elimIndexPrestamo] = idLibrosPrestamo[
+                                            contadorPrestamos - 1
+                                        ];
+                                        fechasPrestamo[elimIndexPrestamo] = fechasPrestamo[
+                                            contadorPrestamos - 1
+                                        ];
+                                        fechasLimite[elimIndexPrestamo] = fechasLimite[
+                                            contadorPrestamos - 1
+                                        ];
+                                        fechasDevolucion[elimIndexPrestamo] = fechasDevolucion[
+                                            contadorPrestamos - 1
+                                        ];
+                                        estados[elimIndexPrestamo] = estados[contadorPrestamos - 1];
+                                        contadorPrestamos--;
+                                        Console.WriteLine("Préstamo eliminado.");
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Préstamo no encontrado.");
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("ID inválido.");
+                                }
+                                Console.WriteLine("Presiona cualquier tecla para continuar...");
+                                Console.ReadKey();
+                                break;
+                            case "0":
+                                volverMenuPrincipalPrestamos = true;
+                                break;
+                            default:
+                                Console.WriteLine(
+                                    "Opción no válida. Presiona cualquier tecla para intentar de nuevo..."
+                                );
+                                Console.ReadKey();
+                                break;
+                        }
+                    }
                     break;
                 case "4":
                     Console.WriteLine("Has seleccionado: Búsquedas y reportes");
