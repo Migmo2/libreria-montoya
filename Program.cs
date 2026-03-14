@@ -777,9 +777,203 @@ class Program
                     }
                     break;
                 case "4":
-                    Console.WriteLine("Has seleccionado: Búsquedas y reportes");
-                    Console.WriteLine("Presiona cualquier tecla para continuar...");
-                    Console.ReadKey();
+                    // Submenú de Búsquedas y reportes
+                    bool volverMenuPrincipalBusquedas = false;
+                    while (!volverMenuPrincipalBusquedas)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("=== BÚSQUEDAS Y REPORTES ===");
+                        Console.WriteLine("1. Buscar libro");
+                        Console.WriteLine("2. Buscar usuario");
+                        Console.WriteLine("3. Reportes");
+                        Console.WriteLine("0. Volver al menú principal");
+                        Console.Write("Selecciona una opción: ");
+
+                        string subOpcionBusquedas = Console.ReadLine();
+
+                        switch (subOpcionBusquedas)
+                        {
+                            case "1":
+                                // Buscar libro - submenú
+                                Console.Clear();
+                                Console.WriteLine("=== BUSCAR LIBRO ===");
+                                Console.WriteLine("1. Por título");
+                                Console.WriteLine("2. Por autor");
+                                Console.WriteLine("3. Por ID/ISBN");
+                                Console.WriteLine("4. Por categoría");
+                                Console.Write("Selecciona: ");
+                                string buscarLibroOpcion = Console.ReadLine();
+                                Console.Write("Ingresa el término de búsqueda: ");
+                                string termino = Console.ReadLine();
+                                bool encontradoLibro = false;
+                                for (int i = 0; i < contadorLibros; i++)
+                                {
+                                    bool coincide = false;
+                                    switch (buscarLibroOpcion)
+                                    {
+                                        case "1":
+                                            coincide = titulos[i]
+                                                .ToLower()
+                                                .Contains(termino.ToLower());
+                                            break;
+                                        case "2":
+                                            coincide = autores[i]
+                                                .ToLower()
+                                                .Contains(termino.ToLower());
+                                            break;
+                                        case "3":
+                                            coincide = isbn[i] == termino;
+                                            break;
+                                        case "4":
+                                            coincide = categorias[i]
+                                                .ToLower()
+                                                .Contains(termino.ToLower());
+                                            break;
+                                        default:
+                                            Console.WriteLine("Opción no válida.");
+                                            break;
+                                    }
+                                    if (coincide)
+                                    {
+                                        Console.WriteLine(
+                                            $"{isbn[i]} - {titulos[i]} - {autores[i]} - {categorias[i]} - {(disponibles[i] ? "Disponible" : "Prestado")}"
+                                        );
+                                        encontradoLibro = true;
+                                    }
+                                }
+                                if (!encontradoLibro)
+                                {
+                                    Console.WriteLine("No se encontraron libros.");
+                                }
+                                Console.WriteLine("Presiona cualquier tecla para continuar...");
+                                Console.ReadKey();
+                                break;
+                            case "2":
+                                // Buscar usuario - submenú
+                                Console.Clear();
+                                Console.WriteLine("=== BUSCAR USUARIO ===");
+                                Console.WriteLine("1. Por nombre");
+                                Console.WriteLine("2. Por ID/documento");
+                                Console.Write("Selecciona: ");
+                                string buscarUsuarioOpcion = Console.ReadLine();
+                                Console.Write("Ingresa el término de búsqueda: ");
+                                string terminoUsuario = Console.ReadLine();
+                                bool encontradoUsuario = false;
+                                for (int i = 0; i < contadorUsuarios; i++)
+                                {
+                                    bool coincideUsuario = false;
+                                    switch (buscarUsuarioOpcion)
+                                    {
+                                        case "1":
+                                            coincideUsuario = nombres[i]
+                                                .ToLower()
+                                                .Contains(terminoUsuario.ToLower());
+                                            break;
+                                        case "2":
+                                            coincideUsuario = documentos[i] == terminoUsuario;
+                                            break;
+                                        default:
+                                            Console.WriteLine("Opción no válida.");
+                                            break;
+                                    }
+                                    if (coincideUsuario)
+                                    {
+                                        Console.WriteLine(
+                                            $"{documentos[i]} - {nombres[i]} - {contactos[i]} - {(activos[i] ? "Activo" : "Inactivo")}"
+                                        );
+                                        encontradoUsuario = true;
+                                    }
+                                }
+                                if (!encontradoUsuario)
+                                {
+                                    Console.WriteLine("No se encontraron usuarios.");
+                                }
+                                Console.WriteLine("Presiona cualquier tecla para continuar...");
+                                Console.ReadKey();
+                                break;
+                            case "3":
+                                // Reportes - submenú
+                                Console.Clear();
+                                Console.WriteLine("=== REPORTES ===");
+                                Console.WriteLine("1. Préstamos por usuario");
+                                Console.WriteLine("2. Préstamos por libro");
+                                Console.WriteLine("3. Préstamos vencidos");
+                                Console.WriteLine("4. Resumen general");
+                                Console.Write("Selecciona: ");
+                                string reporteOpcion = Console.ReadLine();
+                                switch (reporteOpcion)
+                                {
+                                    case "1":
+                                        Console.Write("Ingresa ID/Documento del usuario: ");
+                                        string usuarioReporte = Console.ReadLine();
+                                        Console.WriteLine("=== PRÉSTAMOS POR USUARIO ===");
+                                        for (int i = 0; i < contadorPrestamos; i++)
+                                        {
+                                            if (idUsuariosPrestamo[i] == usuarioReporte)
+                                            {
+                                                Console.WriteLine(
+                                                    $"ID Préstamo: {idPrestamos[i]}, Libro: {idLibrosPrestamo[i]}, Estado: {estados[i]}"
+                                                );
+                                            }
+                                        }
+                                        break;
+                                    case "2":
+                                        Console.Write("Ingresa ID/ISBN del libro: ");
+                                        string libroReporte = Console.ReadLine();
+                                        Console.WriteLine("=== PRÉSTAMOS POR LIBRO ===");
+                                        for (int i = 0; i < contadorPrestamos; i++)
+                                        {
+                                            if (idLibrosPrestamo[i] == libroReporte)
+                                            {
+                                                Console.WriteLine(
+                                                    $"ID Préstamo: {idPrestamos[i]}, Usuario: {idUsuariosPrestamo[i]}, Estado: {estados[i]}"
+                                                );
+                                            }
+                                        }
+                                        break;
+                                    case "3":
+                                        Console.WriteLine("=== PRÉSTAMOS VENCIDOS ===");
+                                        // Placeholder: asumir vencidos si fechaLimite < hoy, pero sin fechas reales
+                                        Console.WriteLine(
+                                            "Funcionalidad no implementada (requiere manejo de fechas)."
+                                        );
+                                        break;
+                                    case "4":
+                                        Console.WriteLine("=== RESUMEN GENERAL ===");
+                                        int totalLibros = contadorLibros;
+                                        int disponiblesCount = 0;
+                                        int prestadosCount = 0;
+                                        for (int i = 0; i < contadorLibros; i++)
+                                        {
+                                            if (disponibles[i])
+                                                disponiblesCount++;
+                                            else
+                                                prestadosCount++;
+                                        }
+                                        Console.WriteLine($"Total libros: {totalLibros}");
+                                        Console.WriteLine($"Disponibles: {disponiblesCount}");
+                                        Console.WriteLine($"Prestados: {prestadosCount}");
+                                        Console.WriteLine($"Total usuarios: {contadorUsuarios}");
+                                        Console.WriteLine($"Total préstamos: {contadorPrestamos}");
+                                        break;
+                                    default:
+                                        Console.WriteLine("Opción no válida.");
+                                        break;
+                                }
+                                Console.WriteLine("Presiona cualquier tecla para continuar...");
+                                Console.ReadKey();
+                                break;
+                            case "0":
+                                volverMenuPrincipalBusquedas = true;
+                                break;
+                            default:
+                                Console.WriteLine(
+                                    "Opción no válida. Presiona cualquier tecla para intentar de nuevo..."
+                                );
+                                Console.ReadKey();
+                                break;
+                        }
+                    }
                     break;
                 case "5":
                     Console.WriteLine("Has seleccionado: Guardar / Cargar datos");
