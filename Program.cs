@@ -13,6 +13,13 @@ class Program
         bool[] disponibles = new bool[100];
         int contadorLibros = 0;
 
+        // Datos de usuarios (arrays fijos, tamaño máximo 100)
+        string[] documentos = new string[100];
+        string[] nombres = new string[100];
+        string[] contactos = new string[100];
+        bool[] activos = new bool[100];
+        int contadorUsuarios = 0;
+
         Console.WriteLine("¡Bienvenido al Sistema de Gestión de Biblioteca Montoya!");
         Console.WriteLine("Aquí puedes gestionar libros, usuarios y préstamos.");
         Console.WriteLine("Presiona cualquier tecla para continuar...");
@@ -265,9 +272,189 @@ class Program
                     }
                     break;
                 case "2":
-                    Console.WriteLine("Has seleccionado: Usuarios");
-                    Console.WriteLine("Presiona cualquier tecla para continuar...");
-                    Console.ReadKey();
+                    // Submenú de Usuarios
+                    bool volverMenuPrincipalUsuarios = false;
+                    while (!volverMenuPrincipalUsuarios)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("=== MENÚ USUARIOS ===");
+                        Console.WriteLine("1. Registrar usuario");
+                        Console.WriteLine("2. Listar usuarios");
+                        Console.WriteLine("3. Ver detalle de usuario (por ID/documento)");
+                        Console.WriteLine("4. Actualizar usuario");
+                        Console.WriteLine("5. Eliminar usuario");
+                        Console.WriteLine("0. Volver al menú principal");
+                        Console.Write("Selecciona una opción: ");
+
+                        string subOpcionUsuarios = Console.ReadLine();
+
+                        switch (subOpcionUsuarios)
+                        {
+                            case "1":
+                                // Registrar usuario
+                                if (contadorUsuarios < 100)
+                                {
+                                    Console.Write("Documento/ID: ");
+                                    documentos[contadorUsuarios] = Console.ReadLine();
+                                    Console.Write("Nombre: ");
+                                    nombres[contadorUsuarios] = Console.ReadLine();
+                                    Console.Write("Contacto: ");
+                                    contactos[contadorUsuarios] = Console.ReadLine();
+                                    activos[contadorUsuarios] = true;
+                                    contadorUsuarios++;
+                                    Console.WriteLine("Usuario registrado exitosamente.");
+                                }
+                                else
+                                {
+                                    Console.WriteLine(
+                                        "No se pueden registrar más usuarios (límite alcanzado)."
+                                    );
+                                }
+                                Console.WriteLine("Presiona cualquier tecla para continuar...");
+                                Console.ReadKey();
+                                break;
+                            case "2":
+                                // Listar usuarios
+                                Console.WriteLine("=== LISTA DE USUARIOS ===");
+                                for (int i = 0; i < contadorUsuarios; i++)
+                                {
+                                    Console.WriteLine(
+                                        $"{documentos[i]} - {nombres[i]} - {contactos[i]} - {(activos[i] ? "Activo" : "Inactivo")}"
+                                    );
+                                }
+                                Console.WriteLine("Presiona cualquier tecla para continuar...");
+                                Console.ReadKey();
+                                break;
+                            case "3":
+                                // Ver detalle
+                                Console.Write("Ingresa ID/Documento: ");
+                                string buscarDocumento = Console.ReadLine();
+                                bool encontradoUsuario = false;
+                                for (int i = 0; i < contadorUsuarios; i++)
+                                {
+                                    if (documentos[i] == buscarDocumento)
+                                    {
+                                        Console.WriteLine($"Documento: {documentos[i]}");
+                                        Console.WriteLine($"Nombre: {nombres[i]}");
+                                        Console.WriteLine($"Contacto: {contactos[i]}");
+                                        Console.WriteLine($"Activo: {(activos[i] ? "Sí" : "No")}");
+                                        encontradoUsuario = true;
+                                        break;
+                                    }
+                                }
+                                if (!encontradoUsuario)
+                                {
+                                    Console.WriteLine("Usuario no encontrado.");
+                                }
+                                Console.WriteLine("Presiona cualquier tecla para continuar...");
+                                Console.ReadKey();
+                                break;
+                            case "4":
+                                // Actualizar usuario - submenú
+                                Console.Write("Ingresa ID/Documento del usuario a actualizar: ");
+                                string actualizarDocumento = Console.ReadLine();
+                                int indexUsuario = -1;
+                                for (int i = 0; i < contadorUsuarios; i++)
+                                {
+                                    if (documentos[i] == actualizarDocumento)
+                                    {
+                                        indexUsuario = i;
+                                        break;
+                                    }
+                                }
+                                if (indexUsuario != -1)
+                                {
+                                    Console.Clear();
+                                    Console.WriteLine("=== ACTUALIZAR USUARIO ===");
+                                    Console.WriteLine("1. Editar nombre");
+                                    Console.WriteLine("2. Editar contacto");
+                                    Console.WriteLine("3. Activar / desactivar");
+                                    Console.Write("Selecciona: ");
+                                    string updateOpcionUsuario = Console.ReadLine();
+                                    switch (updateOpcionUsuario)
+                                    {
+                                        case "1":
+                                            Console.Write("Nuevo nombre: ");
+                                            nombres[indexUsuario] = Console.ReadLine();
+                                            break;
+                                        case "2":
+                                            Console.Write("Nuevo contacto: ");
+                                            contactos[indexUsuario] = Console.ReadLine();
+                                            break;
+                                        case "3":
+                                            Console.Write("Activar (s/n): ");
+                                            string activar = Console.ReadLine().ToLower();
+                                            activos[indexUsuario] = (activar == "s");
+                                            break;
+                                        default:
+                                            Console.WriteLine("Opción no válida.");
+                                            break;
+                                    }
+                                    Console.WriteLine("Usuario actualizado.");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Usuario no encontrado.");
+                                }
+                                Console.WriteLine("Presiona cualquier tecla para continuar...");
+                                Console.ReadKey();
+                                break;
+                            case "5":
+                                // Eliminar usuario
+                                Console.Write("Ingresa ID/Documento del usuario a eliminar: ");
+                                string eliminarDocumento = Console.ReadLine();
+                                int elimIndexUsuario = -1;
+                                for (int i = 0; i < contadorUsuarios; i++)
+                                {
+                                    if (documentos[i] == eliminarDocumento)
+                                    {
+                                        elimIndexUsuario = i;
+                                        break;
+                                    }
+                                }
+                                if (elimIndexUsuario != -1)
+                                {
+                                    // Validar si tiene préstamos activos (por ahora, asumir no)
+                                    bool tienePrestamos = false; // Placeholder
+                                    if (tienePrestamos)
+                                    {
+                                        Console.WriteLine(
+                                            "No se puede eliminar un usuario con préstamos activos."
+                                        );
+                                    }
+                                    else
+                                    {
+                                        // Eliminar moviendo el último al lugar del eliminado
+                                        documentos[elimIndexUsuario] = documentos[
+                                            contadorUsuarios - 1
+                                        ];
+                                        nombres[elimIndexUsuario] = nombres[contadorUsuarios - 1];
+                                        contactos[elimIndexUsuario] = contactos[
+                                            contadorUsuarios - 1
+                                        ];
+                                        activos[elimIndexUsuario] = activos[contadorUsuarios - 1];
+                                        contadorUsuarios--;
+                                        Console.WriteLine("Usuario eliminado.");
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Usuario no encontrado.");
+                                }
+                                Console.WriteLine("Presiona cualquier tecla para continuar...");
+                                Console.ReadKey();
+                                break;
+                            case "0":
+                                volverMenuPrincipalUsuarios = true;
+                                break;
+                            default:
+                                Console.WriteLine(
+                                    "Opción no válida. Presiona cualquier tecla para intentar de nuevo..."
+                                );
+                                Console.ReadKey();
+                                break;
+                        }
+                    }
                     break;
                 case "3":
                     Console.WriteLine("Has seleccionado: Préstamos");
