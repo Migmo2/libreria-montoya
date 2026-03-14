@@ -1172,7 +1172,53 @@ class Program
                     }
                     break;
                 case "6":
-                    Console.WriteLine("Saliendo del sistema...");
+                    Console.Write("¿Guardar antes de salir? (S/N): ");
+                    string guardarSalir = Console.ReadLine().ToLower();
+                    if (guardarSalir == "s")
+                    {
+                        try
+                        {
+                            // Guardar libros
+                            using (StreamWriter writer = new StreamWriter("libros.txt"))
+                            {
+                                for (int i = 0; i < contadorLibros; i++)
+                                {
+                                    writer.WriteLine(
+                                        $"{isbn[i]},{titulos[i]},{autores[i]},{categorias[i]},{anios[i]},{disponibles[i]}"
+                                    );
+                                }
+                            }
+                            // Guardar usuarios
+                            using (StreamWriter writer = new StreamWriter("usuarios.txt"))
+                            {
+                                for (int i = 0; i < contadorUsuarios; i++)
+                                {
+                                    writer.WriteLine(
+                                        $"{documentos[i]},{nombres[i]},{contactos[i]},{activos[i]}"
+                                    );
+                                }
+                            }
+                            // Guardar préstamos
+                            using (StreamWriter writer = new StreamWriter("prestamos.txt"))
+                            {
+                                for (int i = 0; i < contadorPrestamos; i++)
+                                {
+                                    writer.WriteLine(
+                                        $"{idPrestamos[i]},{idUsuariosPrestamo[i]},{idLibrosPrestamo[i]},{fechasPrestamo[i]},{fechasLimite[i]},{fechasDevolucion[i]},{estados[i]}"
+                                    );
+                                }
+                            }
+                            Console.WriteLine("Datos guardados. Saliendo...");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Error al guardar: {ex.Message}. Saliendo...");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Saliendo sin guardar...");
+                    }
                     salir = true;
                     break;
                 default:
