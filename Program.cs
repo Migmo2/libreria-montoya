@@ -56,6 +56,37 @@ class Program
             {
                 case "1":
                     // Submenú de Libros
+                    // ── Objetos de prueba: Clase Libro ─────────────────────
+                    Libro libro1 = new Libro(1, "Cien años de soledad", "Gabriel García Márquez", 1967);
+                    Libro libro2 = new Libro();
+                    libro2.Id     = 2;
+                    libro2.Titulo = "El amor en los tiempos del cólera";
+                    libro2.Autor  = "Gabriel García Márquez";
+                    libro2.Anio   = 1985;
+
+                    Console.Clear();
+                    Console.WriteLine("══════════════════════════════════════════");
+                    Console.WriteLine("  OBJETOS DE PRUEBA — Clase Libro");
+                    Console.WriteLine("══════════════════════════════════════════");
+                    Console.WriteLine("\n--- ResumenCorto() ---");
+                    Console.WriteLine(libro1.ResumenCorto());
+                    Console.WriteLine(libro2.ResumenCorto());
+                    Console.WriteLine("\n--- DetalleCompleto() ---");
+                    Console.WriteLine(libro1.DetalleCompleto());
+                    Console.WriteLine(libro2.DetalleCompleto());
+                    Console.WriteLine("--- ToString() ---");
+                    Console.WriteLine(libro1.ToString());
+                    Console.WriteLine(libro2.ToString());
+                    Console.WriteLine("\n--- Validaciones ---");
+                    Console.WriteLine($"libro1.Disponible = {libro1.Disponible}  (debe ser True)");
+                    Console.WriteLine($"libro2.Disponible = {libro2.Disponible}  (debe ser True)");
+                    libro1.Disponible = false;
+                    Console.WriteLine($"libro1.Disponible tras préstamo = {libro1.Disponible}  (debe ser False)");
+                    Console.WriteLine(libro1.ResumenCorto());
+                    Console.WriteLine("\nPresiona cualquier tecla para continuar al menú...");
+                    Console.ReadKey();
+                    // ──────────────────────────────────────────────────────
+
                     bool volverMenuPrincipal = false;
                     while (!volverMenuPrincipal)
                     {
@@ -285,6 +316,36 @@ class Program
                     break;
                 case "2":
                     // Submenú de Usuarios
+                    // ── Objetos de prueba: Clase Usuario ───────────────────
+                    Usuario usuario1 = new Usuario(1, "María Fernanda López", "mflopez@email.com");
+                    Usuario usuario2 = new Usuario();
+                    usuario2.Id     = 2;
+                    usuario2.Nombre = "Carlos Andrés Ruiz";
+                    usuario2.Email  = "caruiz@email.com";
+
+                    Console.Clear();
+                    Console.WriteLine("══════════════════════════════════════════");
+                    Console.WriteLine("  OBJETOS DE PRUEBA — Clase Usuario");
+                    Console.WriteLine("══════════════════════════════════════════");
+                    Console.WriteLine("\n--- ResumenCorto() ---");
+                    Console.WriteLine(usuario1.ResumenCorto());
+                    Console.WriteLine(usuario2.ResumenCorto());
+                    Console.WriteLine("\n--- DetalleCompleto() ---");
+                    Console.WriteLine(usuario1.DetalleCompleto());
+                    Console.WriteLine(usuario2.DetalleCompleto());
+                    Console.WriteLine("--- ToString() ---");
+                    Console.WriteLine(usuario1.ToString());
+                    Console.WriteLine(usuario2.ToString());
+                    Console.WriteLine("\n--- Validaciones ---");
+                    Console.WriteLine($"usuario1.Activo = {usuario1.Activo}  (debe ser True)");
+                    Console.WriteLine($"usuario2.Activo = {usuario2.Activo}  (debe ser True)");
+                    usuario2.Activo = false;
+                    Console.WriteLine($"usuario2.Activo tras desactivar = {usuario2.Activo}  (debe ser False)");
+                    Console.WriteLine(usuario2.ResumenCorto());
+                    Console.WriteLine("\nPresiona cualquier tecla para continuar al menú...");
+                    Console.ReadKey();
+                    // ──────────────────────────────────────────────────────
+
                     bool volverMenuPrincipalUsuarios = false;
                     while (!volverMenuPrincipalUsuarios)
                     {
@@ -481,6 +542,36 @@ class Program
                     break;
                 case "3":
                     // Submenú de Préstamos
+                    // ── Objetos de prueba: Clase Prestamo ──────────────────
+                    Libro libroDemo = new Libro(10, "Don Quijote de la Mancha", "Miguel de Cervantes", 1605);
+                    Usuario usuarioDemo = new Usuario(10, "Laura Gómez", "lgomez@email.com");
+                    Prestamo prestamo1 = new Prestamo(1, libroDemo, usuarioDemo, DateTime.Now.AddDays(-5));
+
+                    Console.Clear();
+                    Console.WriteLine("══════════════════════════════════════════");
+                    Console.WriteLine("  OBJETOS DE PRUEBA — Clase Prestamo");
+                    Console.WriteLine("══════════════════════════════════════════");
+                    Console.WriteLine("\n--- ResumenCorto() ---");
+                    Console.WriteLine(prestamo1.ResumenCorto());
+                    Console.WriteLine("\n--- DetalleCompleto() ---");
+                    Console.WriteLine(prestamo1.DetalleCompleto());
+                    Console.WriteLine("--- ToString() ---");
+                    Console.WriteLine(prestamo1.ToString());
+                    Console.WriteLine("\n--- Validaciones ---");
+                    Console.WriteLine($"Estado inicial        = {prestamo1.Estado}      (debe ser Activo)");
+                    Console.WriteLine($"FechaDevolucion       = {prestamo1.FechaDevolucion?.ToString("dd/MM/yyyy") ?? "null"}  (debe ser null)");
+                    Console.WriteLine($"EstaVencido()         = {prestamo1.EstaVencido()}   (5 días → debe ser False)");
+                    Console.WriteLine($"DiasTranscurridos()   = {prestamo1.DiasTranscurridos()} días");
+
+                    Prestamo prestamoVencido = new Prestamo(2, libroDemo, usuarioDemo, DateTime.Now.AddDays(-20));
+                    Console.WriteLine($"\n--- Préstamo con 20 días ---");
+                    Console.WriteLine($"EstaVencido()         = {prestamoVencido.EstaVencido()}   (20 días → debe ser True)");
+                    Console.WriteLine($"DiasTranscurridos()   = {prestamoVencido.DiasTranscurridos()} días");
+                    Console.WriteLine(prestamoVencido.ResumenCorto());
+                    Console.WriteLine("\nPresiona cualquier tecla para continuar al menú...");
+                    Console.ReadKey();
+                    // ──────────────────────────────────────────────────────
+
                     bool volverMenuPrincipalPrestamos = false;
                     while (!volverMenuPrincipalPrestamos)
                     {
