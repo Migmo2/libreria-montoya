@@ -19,26 +19,67 @@ namespace libreria_montoya.Services
             return libros;
         }
 
-        public void EliminarLibro(int id)
+        public Libro? BuscarPorId(int id)
         {
-            var libro = libros.FirstOrDefault(l => l.Id == id);
-            if (libro != null)
-                libros.Remove(libro);
+            return libros.FirstOrDefault(l => l.Id == id);
+        }
+
+        public bool ActualizarLibro(int id, Libro libroActualizado)
+        {
+            var libro = BuscarPorId(id);
+            if (libro == null)
+                return false;
+
+            libro.Titulo = libroActualizado.Titulo;
+            libro.Autor = libroActualizado.Autor;
+            libro.Anio = libroActualizado.Anio;
+            libro.Categoria = libroActualizado.Categoria;
+            return true;
+        }
+
+        public bool EliminarLibro(int id)
+        {
+            var libro = BuscarPorId(id);
+            if (libro == null)
+                return false;
+
+            libros.Remove(libro);
+            return true;
+        }
+
+        public List<Libro> ObtenerLibrosDisponibles()
+        {
+            return libros.Where(l => l.Disponible).ToList();
+        }
+
+        public List<Libro> ObtenerLibrosPrestados()
+        {
+            return libros.Where(l => !l.Disponible).ToList();
         }
 
         public List<Libro> BuscarPorTitulo(string titulo)
         {
-            return libros.Where(l => l.Titulo.Contains(titulo)).ToList();
+            return libros.Where(l => l.Titulo.Contains(titulo, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
         public List<Libro> BuscarPorAutor(string autor)
         {
-            return libros.Where(l => l.Autor.Contains(autor)).ToList();
+            return libros.Where(l => l.Autor.Contains(autor, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+
+        public List<Libro> BuscarPorCategoria(string categoria)
+        {
+            return libros.Where(l => l.Categoria.Contains(categoria, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
         public List<Libro> OrdenarPorTitulo()
         {
             return libros.OrderBy(l => l.Titulo).ToList();
+        }
+
+        public List<Libro> OrdenarPorAnio()
+        {
+            return libros.OrderBy(l => l.Anio).ToList();
         }
 
         public int TotalLibros() => libros.Count;
