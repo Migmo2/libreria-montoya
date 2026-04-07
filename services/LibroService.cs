@@ -9,9 +9,13 @@ namespace libreria_montoya.Services
     {
         private List<Libro> libros = new List<Libro>();
 
-        public void AgregarLibro(Libro libro)
+        public bool AgregarLibro(Libro libro)
         {
+            if (BuscarPorId(libro.Id) != null)
+                return false;
+
             libros.Add(libro);
+            return true;
         }
 
         public List<Libro> ObtenerLibros()

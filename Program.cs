@@ -77,7 +77,7 @@ class Program
 
     static void ShowMainMenu()
     {
-        Console.WriteLine("=== MENÚ PRINCIPAL ===");
+        ShowSectionTitle("MENÚ PRINCIPAL");
         Console.WriteLine("1. Libros");
         Console.WriteLine("2. Usuarios");
         Console.WriteLine("3. Préstamos");
@@ -93,7 +93,7 @@ class Program
         while (!volver)
         {
             Console.Clear();
-            Console.WriteLine("=== MENU LIBROS ===");
+            ShowSectionTitle("MENU LIBROS");
             Console.WriteLine("1. Registrar libro");
             Console.WriteLine("2. Listar libros");
             Console.WriteLine("3. Ver detalle por ID");
@@ -124,7 +124,7 @@ class Program
         while (!volver)
         {
             Console.Clear();
-            Console.WriteLine("=== MENU USUARIOS ===");
+            ShowSectionTitle("MENU USUARIOS");
             Console.WriteLine("1. Registrar usuario");
             Console.WriteLine("2. Listar usuarios");
             Console.WriteLine("3. Ver detalle por ID");
@@ -155,7 +155,7 @@ class Program
         while (!volver)
         {
             Console.Clear();
-            Console.WriteLine("=== MENU PRESTAMOS ===");
+            ShowSectionTitle("MENU PRESTAMOS");
             Console.WriteLine("1. Crear préstamo");
             Console.WriteLine("2. Listar préstamos");
             Console.WriteLine("3. Ver detalle por ID");
@@ -186,7 +186,7 @@ class Program
         while (!volver)
         {
             Console.Clear();
-            Console.WriteLine("=== BUSQUEDAS Y REPORTES ===");
+            ShowSectionTitle("BUSQUEDAS Y REPORTES");
             Console.WriteLine("1. Buscar libro");
             Console.WriteLine("2. Buscar usuario");
             Console.WriteLine("3. Reportes");
@@ -213,7 +213,7 @@ class Program
         while (!volver)
         {
             Console.Clear();
-            Console.WriteLine("=== GUARDAR / CARGAR DATOS ===");
+            ShowSectionTitle("GUARDAR / CARGAR DATOS");
             Console.WriteLine("1. Guardar datos");
             Console.WriteLine("2. Cargar datos");
             Console.WriteLine("3. Reiniciar datos");
@@ -251,21 +251,27 @@ class Program
     static void RegisterBook()
     {
         Console.Clear();
-        Console.WriteLine("=== REGISTRAR LIBRO ===");
+        ShowSectionTitle("REGISTRAR LIBRO");
         int id = ReadInt("ID: ");
         string titulo = ReadText("Título: ");
         string autor = ReadText("Autor: ");
         int anio = ReadInt("Año: ");
         string categoria = ReadText("Categoría: ");
-        libroService.AgregarLibro(new Libro(id, titulo, autor, anio, categoria));
-        Console.WriteLine("Libro registrado correctamente.");
+        if (libroService.AgregarLibro(new Libro(id, titulo, autor, anio, categoria)))
+        {
+            Console.WriteLine("Libro registrado correctamente.");
+        }
+        else
+        {
+            Console.WriteLine("Ya existe un libro con ese ID.");
+        }
         Pause();
     }
 
     static void ListBooksMenu()
     {
         Console.Clear();
-        Console.WriteLine("=== LISTAR LIBROS ===");
+        ShowSectionTitle("LISTAR LIBROS");
         Console.WriteLine("1. Listar todos");
         Console.WriteLine("2. Listar disponibles");
         Console.WriteLine("3. Listar prestados");
@@ -337,7 +343,7 @@ class Program
         }
 
         Console.Clear();
-        Console.WriteLine("=== ACTUALIZAR LIBRO ===");
+        ShowSectionTitle("ACTUALIZAR LIBRO");
         Console.WriteLine("1. Editar título");
         Console.WriteLine("2. Editar autor");
         Console.WriteLine("3. Editar año/categoría");
@@ -427,19 +433,25 @@ class Program
     static void RegisterUser()
     {
         Console.Clear();
-        Console.WriteLine("=== REGISTRAR USUARIO ===");
+        ShowSectionTitle("REGISTRAR USUARIO");
         int id = ReadInt("ID: ");
         string nombre = ReadText("Nombre: ");
         string email = ReadText("Email: ");
-        usuarioService.AgregarUsuario(new Usuario(id, nombre, email));
-        Console.WriteLine("Usuario registrado correctamente.");
+        if (usuarioService.AgregarUsuario(new Usuario(id, nombre, email)))
+        {
+            Console.WriteLine("Usuario registrado correctamente.");
+        }
+        else
+        {
+            Console.WriteLine("Ya existe un usuario con ese ID.");
+        }
         Pause();
     }
 
     static void ListUsers()
     {
         Console.Clear();
-        Console.WriteLine("=== LISTAR USUARIOS ===");
+        ShowSectionTitle("LISTAR USUARIOS");
         foreach (var usuario in usuarioService.ObtenerUsuarios())
         {
             Console.WriteLine(usuario.DetalleCompleto());
@@ -475,7 +487,7 @@ class Program
         }
 
         Console.Clear();
-        Console.WriteLine("=== ACTUALIZAR USUARIO ===");
+        ShowSectionTitle("ACTUALIZAR USUARIO");
         Console.WriteLine("1. Editar nombre");
         Console.WriteLine("2. Editar contacto");
         Console.WriteLine("3. Activar / desactivar");
@@ -529,14 +541,11 @@ class Program
 
     static void ToggleUserActiveStatus(Usuario usuario)
     {
-        var actualizado = new Usuario(usuario.Id, usuario.Nombre, usuario.Email)
-        {
-            Activo = !usuario.Activo
-        };
+        bool nuevoEstado = !usuario.Activo;
 
-        if (usuarioService.ActualizarUsuario(usuario.Id, actualizado))
+        if (usuarioService.CambiarEstadoActivo(usuario.Id, nuevoEstado))
         {
-            Console.WriteLine($"Usuario {(actualizado.Activo ? "activado" : "desactivado")}.");
+            Console.WriteLine($"Usuario {(nuevoEstado ? "activado" : "desactivado")}.");
         }
         else
         {
@@ -570,7 +579,7 @@ class Program
     static void CreateLoan()
     {
         Console.Clear();
-        Console.WriteLine("=== CREAR PRÉSTAMO ===");
+        ShowSectionTitle("CREAR PRESTAMO");
         Console.WriteLine("Validaciones: libro disponible, usuario activo, ID correcto.");
         int libroId = ReadInt("ID del libro: ");
         int usuarioId = ReadInt("ID del usuario: ");
@@ -610,15 +619,22 @@ class Program
         int nuevoId = prestamoService.ObtenerPrestamos().Any()
             ? prestamoService.ObtenerPrestamos().Max(p => p.Id) + 1
             : 1;
-        prestamoService.AgregarPrestamo(new Prestamo(nuevoId, libro, usuario, DateTime.Now));
-        Console.WriteLine("Préstamo creado con éxito.");
+        if (prestamoService.AgregarPrestamo(new Prestamo(nuevoId, libro, usuario, DateTime.Now)))
+        {
+            Console.WriteLine("Préstamo creado con éxito.");
+        }
+        else
+        {
+            libro.Disponible = true;
+            Console.WriteLine("Ya existe un préstamo con ese ID.");
+        }
         Pause();
     }
 
     static void ListLoansMenu()
     {
         Console.Clear();
-        Console.WriteLine("=== LISTAR PRÉSTAMOS ===");
+        ShowSectionTitle("LISTAR PRESTAMOS");
         Console.WriteLine("1. Todos");
         Console.WriteLine("2. Activos");
         Console.WriteLine("3. Cerrados");
@@ -723,7 +739,7 @@ class Program
     static void SearchBook()
     {
         Console.Clear();
-        Console.WriteLine("=== BUSCAR LIBRO ===");
+        ShowSectionTitle("BUSCAR LIBRO");
         Console.WriteLine("Busca por ID, título, autor o categoría.");
         string termino = ReadText("Ingrese término de búsqueda: ");
 
@@ -759,7 +775,7 @@ class Program
     static void SearchUser()
     {
         Console.Clear();
-        Console.WriteLine("=== BUSCAR USUARIO ===");
+        ShowSectionTitle("BUSCAR USUARIO");
         Console.WriteLine("Busca por ID o nombre.");
         string termino = ReadText("Ingrese término de búsqueda: ");
 
@@ -794,7 +810,7 @@ class Program
         while (!volver)
         {
             Console.Clear();
-            Console.WriteLine("=== REPORTES ===");
+            ShowSectionTitle("REPORTES");
             Console.WriteLine("1. Reporte por usuario");
             Console.WriteLine("2. Reporte por libro");
             Console.WriteLine("3. Préstamos vencidos");
@@ -873,7 +889,7 @@ class Program
 
     static void ReportSummary()
     {
-        Console.WriteLine("=== RESUMEN GENERAL ===");
+        ShowSectionTitle("RESUMEN GENERAL");
         Console.WriteLine($"Total libros: {libroService.TotalLibros()}");
         Console.WriteLine($"Libros disponibles: {libroService.LibrosDisponibles()}");
         Console.WriteLine($"Libros prestados: {libroService.LibrosPrestados()}");
@@ -893,7 +909,7 @@ class Program
         string[] categoriasArray = { "Novela", "Infantil" };
         var categoriasList = new List<string> { "Novela", "Infantil" };
 
-        Console.WriteLine("=== COMPARACIÓN ARRAY VS LIST ===");
+        ShowSectionTitle("COMPARACION ARRAY VS LIST");
         Console.WriteLine($"Array inicial: {string.Join(", ", categoriasArray)}");
         Console.WriteLine("Array: tamaño fijo, para cambiar su capacidad hay que crear otro arreglo.");
         Console.WriteLine($"List inicial: {string.Join(", ", categoriasList)}");
@@ -961,6 +977,16 @@ class Program
     {
         Console.Write(prompt);
         return Console.ReadLine() ?? string.Empty;
+    }
+
+    static void ShowSectionTitle(string title)
+    {
+        string line = new string('=', title.Length + 10);
+        Console.WriteLine();
+        Console.WriteLine(line);
+        Console.WriteLine($"   {title}");
+        Console.WriteLine(line);
+        Console.WriteLine();
     }
 
     static void Pause()

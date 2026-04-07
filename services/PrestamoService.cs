@@ -22,9 +22,13 @@ namespace libreria_montoya.Services
             }
         }
 
-        public void AgregarPrestamo(Prestamo prestamo)
+        public bool AgregarPrestamo(Prestamo prestamo)
         {
+            if (BuscarPorId(prestamo.Id) != null)
+                return false;
+
             prestamos.Add(prestamo);
+            return true;
         }
 
         public List<Prestamo> ObtenerPrestamos()

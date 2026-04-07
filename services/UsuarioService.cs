@@ -9,9 +9,13 @@ namespace libreria_montoya.Services
     {
         private List<Usuario> usuarios = new List<Usuario>();
 
-        public void AgregarUsuario(Usuario usuario)
+        public bool AgregarUsuario(Usuario usuario)
         {
+            if (BuscarPorId(usuario.Id) != null)
+                return false;
+
             usuarios.Add(usuario);
+            return true;
         }
 
         public List<Usuario> ObtenerUsuarios()
@@ -33,6 +37,16 @@ namespace libreria_montoya.Services
             usuario.Nombre = usuarioActualizado.Nombre;
             usuario.Email = usuarioActualizado.Email;
             usuario.Activo = usuarioActualizado.Activo;
+            return true;
+        }
+
+        public bool CambiarEstadoActivo(int id, bool activo)
+        {
+            var usuario = BuscarPorId(id);
+            if (usuario == null)
+                return false;
+
+            usuario.Activo = activo;
             return true;
         }
 
