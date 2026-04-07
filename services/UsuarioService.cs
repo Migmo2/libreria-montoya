@@ -19,9 +19,36 @@ namespace libreria_montoya.Services
             return usuarios;
         }
 
+        public Usuario? BuscarPorId(int id)
+        {
+            return usuarios.FirstOrDefault(u => u.Id == id);
+        }
+
+        public bool ActualizarUsuario(int id, Usuario usuarioActualizado)
+        {
+            var usuario = BuscarPorId(id);
+            if (usuario == null)
+                return false;
+
+            usuario.Nombre = usuarioActualizado.Nombre;
+            usuario.Email = usuarioActualizado.Email;
+            usuario.Activo = usuarioActualizado.Activo;
+            return true;
+        }
+
+        public bool EliminarUsuario(int id)
+        {
+            var usuario = BuscarPorId(id);
+            if (usuario == null)
+                return false;
+
+            usuarios.Remove(usuario);
+            return true;
+        }
+
         public List<Usuario> BuscarPorNombre(string nombre)
         {
-            return usuarios.Where(u => u.Nombre.Contains(nombre)).ToList();
+            return usuarios.Where(u => u.Nombre.Contains(nombre, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
         public List<Usuario> OrdenarPorNombre()
